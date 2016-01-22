@@ -4,10 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by andrey on 22.01.16.
- */
-class DBHelper extends SQLiteOpenHelper {
+
+public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
         // конструктор суперкласса
@@ -18,7 +16,7 @@ class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table mytable ("
                 + "id integer primary key autoincrement,"
-                + "time text,"
+                + "time long,"
                 + "text text" + ");");
     }
 

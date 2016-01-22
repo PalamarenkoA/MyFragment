@@ -1,12 +1,17 @@
 package com.example.andrey.myfragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,27 +23,34 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.desarrollodroide.libraryfragmenttransactionextended.FragmentTransactionExtended;
 import com.example.andrey.myfragment.Fragment.FragmentInput;
 import com.example.andrey.myfragment.Fragment.FragmentList;
+
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,FragmentInput.onSaveText {
     private FragmentTransaction fTrans;
-    private  FragmentInput fragmentInput;
-    private FragmentList fragmentList;
+    private  Fragment fragmentInput;
+    private Fragment fragmentList;
     public static Context context;
+    DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        onCreateFloatingVButtonNavigationDrawerToolbar();
         context = this;
         fragmentInput = new FragmentInput();
         fragmentList = new FragmentList();
+        dbHelper = new DBHelper(this);
+        //Add first fragment
         fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.folder, fragmentInput);
         fTrans.commit();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +61,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+
+    }
+
+    private void onCreateFloatingVButtonNavigationDrawerToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -69,12 +87,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -94,18 +106,24 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        switch (item.getItemId()){
-            case R.id.nav_camera:
-                fTrans = getFragmentManager().beginTransaction();
-                fTrans.replace(R.id.folder, fragmentInput);
-                fTrans.commit();
+       switch (item.getItemId()){
+            case R.id.itemListFragment:
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                FragmentTransactionExtended fragmentTransactionExtended = new FragmentTransactionExtended(this, fragmentTransaction, fragmentList,fragmentInput , R.id.folder);
+                fragmentTransactionExtended.addTransition(3);
+                fragmentTransactionExtended.commit();
+
+
+
+
                 break;
-            case R.id.nav_gallery:
-                fTrans = getFragmentManager().beginTransaction();
-                fTrans.replace(R.id.folder, fragmentList);
-                fTrans.commit();
+            case R.id.itemInputFragment:
+                FragmentManager fm2 = getFragmentManager();
+                FragmentTransaction fragmentTransaction2 = fm2.beginTransaction();
+                fragmentTransactionExtended = new FragmentTransactionExtended(this, fragmentTransaction2, fragmentInput, fragmentList, R.id.folder);
+                fragmentTransactionExtended.addTransition(3);
+                fragmentTransactionExtended.commit();
                 break;
         }
 
@@ -115,7 +133,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void saveText(String Text, long time) {
+    public void saveText(String text, long time) {
+        ContentValues cv = new ContentValues();
+        cv.put("time", time);
+        cv.put("text", text);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.insert("mytable", null, cv);
         Toast.makeText(MainActivity.context, "Сохранено", Toast.LENGTH_LONG).show();
+
+
+
+
     }
 }

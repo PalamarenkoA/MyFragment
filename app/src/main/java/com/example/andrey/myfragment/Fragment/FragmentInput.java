@@ -6,9 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.andrey.myfragment.MainActivity;
 import com.example.andrey.myfragment.R;
 
@@ -17,7 +15,7 @@ import java.util.Date;
 
 public class FragmentInput extends android.app.Fragment {
     public interface onSaveText {
-        public void saveText (String Text, long time);
+        void saveText (String text, long time);
     }
 
     @Override
@@ -42,7 +40,7 @@ public class FragmentInput extends android.app.Fragment {
                 if (editText.getText().length()>0) {
                     onSaveText.saveText(String.valueOf(editText.getText()), new Date().getTime());
                 }else{
-                    Toast.makeText(MainActivity.context,"Заполните окно!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.context,"Введите текст",Toast.LENGTH_LONG).show();
                 }
 
             }
