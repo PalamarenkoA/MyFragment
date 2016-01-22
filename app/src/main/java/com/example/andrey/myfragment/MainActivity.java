@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         onCreateNavigationDrawerToolbar();
         context = this;
+        startService(new Intent(this,MyService.class));
         NETWORK = isNetworkAvailable();
         Firebase.setAndroidContext(this);
         myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
