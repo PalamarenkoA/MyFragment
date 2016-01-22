@@ -1,5 +1,4 @@
 package com.example.andrey.myfragment.Adapter;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +14,13 @@ import java.util.ArrayList;
 /**
  * Created by andrey on 22.01.16.
  */
-public class ListAdapter extends BaseAdapter {
+public class ListAdapterFromDatabase extends BaseAdapter {
     Context ctx;
     LayoutInflater lInflater;
     ArrayList<ItemObject> itemObjectsArray;
 
 
-    public ListAdapter(Context ctx, ArrayList<ItemObject> itemObjectsArray){
+    public ListAdapterFromDatabase(Context ctx, ArrayList<ItemObject> itemObjectsArray){
         this.itemObjectsArray = itemObjectsArray;
         this.ctx = ctx;
 
@@ -48,9 +47,10 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-            View view = lInflater.inflate(R.layout.item, parent, false);
-            ((TextView) view.findViewById(R.id.itemText)).setText(itemObjectsArray.get(position).getText());
-            ((TextView) view.findViewById(R.id.itemTime)).setText(itemObjectsArray.get(position).getDate());
+        View view = lInflater.inflate(R.layout.item, parent, false);
+        ((TextView) view.findViewById(R.id.itemText)).setText(itemObjectsArray.get(position).getText());
+        ((TextView) view.findViewById(R.id.itemTime)).setText(itemObjectsArray.get(position).getDate());
+        ((TextView) view.findViewById(R.id.itemUserName)).setText(itemObjectsArray.get(position).getUserName()+ ":");
 
         return view;
     }

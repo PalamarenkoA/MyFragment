@@ -1,5 +1,6 @@
 package com.example.andrey.myfragment.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,10 @@ import java.util.Date;
 
 
 public class FragmentInput extends android.app.Fragment {
+    SharedPreferences userName;
+    EditText editUserName;
+    EditText editText;
+
     public interface onSaveText {
         void saveText (String text, long time);
     }
@@ -26,12 +31,17 @@ public class FragmentInput extends android.app.Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+       setUserHint();
+        super.onResume();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_fragment_input, container, false);
-        final EditText editText = (EditText) v.findViewById(R.id.editText);
+        editText = (EditText) v.findViewById(R.id.editText);
         Button saveButton = (Button) v.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +57,34 @@ public class FragmentInput extends android.app.Fragment {
         });
 
 
+        editUserName = (EditText) v.findViewById(R.id.userName);
+        Button saveUserName = (Button) v.findViewById(R.id.saveUserName);
+        setUserHint();
+
+        saveUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences.Editor ed = userName.edit();
+                ed.putString(MainActivity.SAVED_USER_NAME, editUserName.getText().toString());
+                ed.commit();
+                setUserHint();
+                editUserName.setText("");
+                Toast.makeText(MainActivity.context, "Save User Name", Toast.LENGTH_LONG);
+
+            }
+        });
+
+
+
+
         return v;
+    }
+
+
+    private void setUserHint(){
+        userName = getActivity().getPreferences(MainActivity.context.MODE_PRIVATE);
+        editUserName.setHint(userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
     }
 
 

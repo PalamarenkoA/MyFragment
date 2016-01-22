@@ -4,27 +4,32 @@ package com.example.andrey.myfragment;
  * Created by andrey on 22.01.16.
  */
 public class ItemObject {
-    int id;
-    String text;
-    String date;
-    public ItemObject(int id, String text, String date){
-        this.id = id;
+    private String text;
+    private String date;
+    private String userName;
+
+    @SuppressWarnings("unused")
+    public ItemObject(){
+
+    }
+    public ItemObject(String text, String date, String userName){
+
         this.text = text;
         this.date = date;
+        this.userName = userName;
     }
 
 
 
 
-
-
-    public int getId() {
-        return id;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
+
 
     public String getText() {
         return text;

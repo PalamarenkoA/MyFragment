@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,7 +28,11 @@ import android.widget.Toast;
 import com.desarrollodroide.libraryfragmenttransactionextended.FragmentTransactionExtended;
 import com.example.andrey.myfragment.Fragment.FragmentInput;
 import com.example.andrey.myfragment.Fragment.FragmentList;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -36,37 +42,39 @@ public class MainActivity extends AppCompatActivity
     private FragmentTransaction fTrans;
     private  Fragment fragmentInput;
     private Fragment fragmentList;
+    public static String SAVED_USER_NAME = "SaveUserName";
     public static Context context;
-    DBHelper dbHelper;
+    public static Boolean NETWORK;
+    private DBHelper dbHelper;
+    private SharedPreferences userName;
+    private Firebase myFirebaseRef;
+    private ChildEventListener mListener;
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        onCreateFloatingVButtonNavigationDrawerToolbar();
+        onCreateNavigationDrawerToolbar();
         context = this;
+        NETWORK = isNetworkAvailable();
         Firebase.setAndroidContext(this);
+        myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
         fragmentInput = new FragmentInput();
         fragmentList = new FragmentList();
+        userName = getPreferences(MODE_PRIVATE);
         dbHelper = new DBHelper(this);
         //Add first fragment
         fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.folder, fragmentInput);
         fTrans.commit();
+        if(NETWORK){
+        DBadd(mListener);}
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
 
     }
 
-    private void onCreateFloatingVButtonNavigationDrawerToolbar() {
+    private void onCreateNavigationDrawerToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -90,20 +98,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -115,10 +110,6 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransactionExtended fragmentTransactionExtended = new FragmentTransactionExtended(this, fragmentTransaction, fragmentList,fragmentInput , R.id.folder);
                 fragmentTransactionExtended.addTransition(3);
                 fragmentTransactionExtended.commit();
-
-
-
-
                 break;
             case R.id.itemInputFragment:
                 FragmentManager fm2 = getFragmentManager();
@@ -135,17 +126,68 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //Это реализация интерфейса с фрагмента
     @Override
     public void saveText(String text, long time) {
-        ContentValues cv = new ContentValues();
-        cv.put("time", time);
-        cv.put("text", text);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.insert("mytable", null, cv);
+
+        ItemObject itemObject = new ItemObject(text,String.valueOf(new Date(time)),
+                userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
+        myFirebaseRef.push().setValue(itemObject);
+
+
         Toast.makeText(MainActivity.context, "Сохранено", Toast.LENGTH_LONG).show();
 
 
 
 
+    }
+    private void DBadd(ChildEventListener mListener){
+        db = dbHelper.getWritableDatabase();
+        try {
+
+             db.delete("myMes", null, null);
+        }catch (Exception e){
+
+        }
+        mListener = myFirebaseRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ItemObject item = dataSnapshot.getValue(ItemObject.class);
+                ContentValues cv = new ContentValues();
+                cv.put("time", item.getDate());
+                cv.put("user", item.getUserName());
+                cv.put("text", item.getText());
+                db.insert("myMes", null, cv);
+                Log.d("logos", "" + item.getText());
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

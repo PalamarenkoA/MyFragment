@@ -14,9 +14,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table mytable ("
+        db.execSQL("create table myMes ("
                 + "id integer primary key autoincrement,"
-                + "time long,"
+                + "time text,"
+                + "user text,"
                 + "text text" + ");");
     }
 
