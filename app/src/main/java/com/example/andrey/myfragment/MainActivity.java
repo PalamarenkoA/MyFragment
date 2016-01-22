@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.desarrollodroide.libraryfragmenttransactionextended.FragmentTransactionExtended;
 import com.example.andrey.myfragment.Fragment.FragmentInput;
 import com.example.andrey.myfragment.Fragment.FragmentList;
+import com.firebase.client.Firebase;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         onCreateFloatingVButtonNavigationDrawerToolbar();
         context = this;
+        Firebase.setAndroidContext(this);
         fragmentInput = new FragmentInput();
         fragmentList = new FragmentList();
         dbHelper = new DBHelper(this);
@@ -122,6 +124,7 @@ public class MainActivity extends AppCompatActivity
                 FragmentManager fm2 = getFragmentManager();
                 FragmentTransaction fragmentTransaction2 = fm2.beginTransaction();
                 fragmentTransactionExtended = new FragmentTransactionExtended(this, fragmentTransaction2, fragmentInput, fragmentList, R.id.folder);
+
                 fragmentTransactionExtended.addTransition(3);
                 fragmentTransactionExtended.commit();
                 break;
