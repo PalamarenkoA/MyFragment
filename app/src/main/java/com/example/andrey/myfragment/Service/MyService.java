@@ -1,19 +1,18 @@
-package com.example.andrey.myfragment;
+package com.example.andrey.myfragment.Service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
+import com.example.andrey.myfragment.MainActivity;
+import com.example.andrey.myfragment.Object.ItemObject;
+import com.example.andrey.myfragment.R;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;

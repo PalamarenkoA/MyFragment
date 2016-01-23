@@ -4,38 +4,27 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.example.andrey.myfragment.Adapter.ListAdapterFromDatabase;
 import com.example.andrey.myfragment.Adapter.ListAdapterFromFirebase;
-import com.example.andrey.myfragment.DBHelper;
-import com.example.andrey.myfragment.InternetListener;
-import com.example.andrey.myfragment.ItemObject;
+import com.example.andrey.myfragment.SQLite.DBHelper;
+import com.example.andrey.myfragment.BroadcastReceiver.InternetListener;
+import com.example.andrey.myfragment.Object.ItemObject;
 import com.example.andrey.myfragment.MainActivity;
 import com.example.andrey.myfragment.R;
 import com.firebase.client.Firebase;
 import java.util.ArrayList;
 
 
-/**
- * Created by andrey on 22.01.16.
- */
+
 public class FragmentList  extends android.app.Fragment {
     SharedPreferences userName;
     Firebase myFirebaseRef;
     ListView listView;
-@Override
-public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {}
-        }
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -85,7 +74,11 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
         c.close();
         return arrayList;
     }
-
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {}
+    }
 
 
         }

@@ -1,18 +1,12 @@
 package com.example.andrey.myfragment.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.andrey.myfragment.ItemObject;
+import com.example.andrey.myfragment.Object.ItemObject;
 import com.example.andrey.myfragment.R;
 import com.firebase.client.Query;
-
-import java.util.ArrayList;
 
 /**
  * Created by andrey on 22.01.16.

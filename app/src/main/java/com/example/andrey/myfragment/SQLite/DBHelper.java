@@ -1,4 +1,4 @@
-package com.example.andrey.myfragment;
+package com.example.andrey.myfragment.SQLite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

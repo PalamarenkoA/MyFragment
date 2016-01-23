@@ -1,4 +1,4 @@
-package com.example.andrey.myfragment;
+package com.example.andrey.myfragment.Object;
 
 /**
  * Created by andrey on 22.01.16.

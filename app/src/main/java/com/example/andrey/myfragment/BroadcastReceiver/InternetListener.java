@@ -1,16 +1,17 @@
-package com.example.andrey.myfragment;
+package com.example.andrey.myfragment.BroadcastReceiver;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.example.andrey.myfragment.MainActivity;
+import com.example.andrey.myfragment.Object.ItemObject;
+import com.example.andrey.myfragment.SQLite.DBHelper;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;

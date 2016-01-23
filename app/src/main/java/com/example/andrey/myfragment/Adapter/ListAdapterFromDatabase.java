@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.andrey.myfragment.ItemObject;
+import com.example.andrey.myfragment.Object.ItemObject;
 import com.example.andrey.myfragment.R;
 
 import java.util.ArrayList;
