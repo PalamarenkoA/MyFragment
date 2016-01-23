@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +41,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
         userName = getActivity().getPreferences(MainActivity.context.MODE_PRIVATE);
         View v = inflater.inflate(R.layout.fragment_fragment_list, container, false);
         ListView listView = (ListView) v.findViewById(R.id.listView);
-
-    if(MainActivity.NETWORK) {
+      if(MainActivity.NETWORK) {
         myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
         ListAdapterFromFirebase listAdapter = new ListAdapterFromFirebase(myFirebaseRef.limit(50), getActivity(), R.layout.item, userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
         listView.setAdapter(listAdapter);
@@ -63,9 +63,6 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Cursor c = db.query("myMes", null, null, null, null, null, null);
         ArrayList<ItemObject> arrayList = new ArrayList<>();
         if (c.moveToFirst()) {
-
-
-            int idColIndex = c.getColumnIndex("id");
             int textColIndex = c.getColumnIndex("text");
             int timeColIndex = c.getColumnIndex("time");
             int userColIndex = c.getColumnIndex("user");

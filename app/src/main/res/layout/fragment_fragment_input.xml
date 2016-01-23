@@ -16,21 +16,28 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="Отправить сообщение"
         android:id="@+id/saveButton" />
 
-    <EditText
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/userName"
-        android:inputType="textPersonName"
-        android:ems="10" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SAVE USER NAME"
-        android:id="@+id/saveUserName" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/userName"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сохранить ваш ник"
+            android:id="@+id/saveUserName" />
+    </LinearLayout>
 
 
 </LinearLayout>

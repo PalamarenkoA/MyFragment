@@ -7,20 +7,30 @@ public class ItemObject {
     private String text;
     private String date;
     private String userName;
+    private String id;
+    public ItemObject(String text, String date, String userName, String id){
+        this.id = id;
+        this.text = text;
+        this.date = date;
+        this.userName = userName;
+    }
+    public ItemObject(String text, String date, String userName){
+        this.text = text;
+        this.date = date;
+        this.userName = userName;
+    }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @SuppressWarnings("unused")
     public ItemObject(){
 
     }
-    public ItemObject(String text, String date, String userName){
-
-        this.text = text;
-        this.date = date;
-        this.userName = userName;
-    }
-
-
-
 
     public String getUserName() {
         return userName;

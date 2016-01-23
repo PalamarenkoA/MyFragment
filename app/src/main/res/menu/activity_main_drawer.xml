@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/itemListFragment"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/chat_icon"
             android:title="InputFragment" />
         <item
             android:id="@+id/itemInputFragment"

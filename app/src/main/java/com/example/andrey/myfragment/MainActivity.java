@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity
         context = this;
         startService(new Intent(this,MyService.class));
         NETWORK = isNetworkAvailable();
-        Firebase.setAndroidContext(this);
         myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
         fragmentInput = new FragmentInput();
         fragmentList = new FragmentList();
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 FragmentTransactionExtended fragmentTransactionExtended = new FragmentTransactionExtended(this, fragmentTransaction, fragmentList,fragmentInput , R.id.folder);
-                fragmentTransactionExtended.addTransition(3);
+                fragmentTransactionExtended.addTransition(0);
                 fragmentTransactionExtended.commit();
                 break;
             case R.id.itemInputFragment:
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
                 FragmentTransaction fragmentTransaction2 = fm2.beginTransaction();
                 fragmentTransactionExtended = new FragmentTransactionExtended(this, fragmentTransaction2, fragmentInput, fragmentList, R.id.folder);
 
-                fragmentTransactionExtended.addTransition(3);
+                fragmentTransactionExtended.addTransition(0);
                 fragmentTransactionExtended.commit();
                 break;
         }
@@ -131,9 +131,9 @@ public class MainActivity extends AppCompatActivity
     //Это реализация интерфейса с фрагмента
     @Override
     public void saveText(String text, long time) {
-
+        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
         ItemObject itemObject = new ItemObject(text,String.valueOf(new Date(time)),
-                userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
+                userName.getString(MainActivity.SAVED_USER_NAME, "User1"), telephonyManager.getDeviceId());
         myFirebaseRef.push().setValue(itemObject);
 
 
