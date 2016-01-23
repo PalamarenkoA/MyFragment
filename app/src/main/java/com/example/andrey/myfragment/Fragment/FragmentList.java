@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.example.andrey.myfragment.Adapter.ListAdapterFromDatabase;
 import com.example.andrey.myfragment.Adapter.ListAdapterFromFirebase;
 import com.example.andrey.myfragment.DBHelper;
+import com.example.andrey.myfragment.InternetListener;
 import com.example.andrey.myfragment.ItemObject;
 import com.example.andrey.myfragment.MainActivity;
 import com.example.andrey.myfragment.R;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 public class FragmentList  extends android.app.Fragment {
     SharedPreferences userName;
     Firebase myFirebaseRef;
-
+    ListView listView;
 @Override
 public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -35,20 +36,19 @@ public void onCreate(Bundle savedInstanceState){
         }
 
 
-@Override
+    @Override
+    public void onResume() {
+        super.onResume();
+        setAdapter();
+    }
+
+    @Override
 public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
         userName = getActivity().getPreferences(MainActivity.context.MODE_PRIVATE);
         View v = inflater.inflate(R.layout.fragment_fragment_list, container, false);
-        ListView listView = (ListView) v.findViewById(R.id.listView);
-      if(MainActivity.NETWORK) {
-        myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
-        ListAdapterFromFirebase listAdapter = new ListAdapterFromFirebase(myFirebaseRef.limit(50), getActivity(), R.layout.item, userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
-        listView.setAdapter(listAdapter);
-    }else{
-        ListAdapterFromDatabase listAdapter = new ListAdapterFromDatabase(MainActivity.context,readDB());
-        listView.setAdapter(listAdapter);
-    }
+        listView = (ListView) v.findViewById(R.id.listView);
+        setAdapter();
 
 
 
@@ -56,8 +56,17 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
         }
 
 
-
-    public ArrayList<ItemObject> readDB(){
+    private void setAdapter(){
+        if(InternetListener.NETWORK) {
+            myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
+            ListAdapterFromFirebase listAdapter = new ListAdapterFromFirebase(myFirebaseRef.limit(50), getActivity(), R.layout.item, userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
+            listView.setAdapter(listAdapter);
+        }else{
+            ListAdapterFromDatabase listAdapter = new ListAdapterFromDatabase(MainActivity.context,readDB());
+            listView.setAdapter(listAdapter);
+        }
+    }
+    private ArrayList<ItemObject> readDB(){
         DBHelper dbHelper = new DBHelper(MainActivity.context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor c = db.query("myMes", null, null, null, null, null, null);

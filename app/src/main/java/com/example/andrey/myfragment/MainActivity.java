@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -46,7 +47,6 @@ public class MainActivity extends AppCompatActivity
     private Fragment fragmentList;
     public static String SAVED_USER_NAME = "SaveUserName";
     public static Context context;
-    public static Boolean NETWORK;
     private DBHelper dbHelper;
     private SharedPreferences userName;
     private Firebase myFirebaseRef;
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity
         onCreateNavigationDrawerToolbar();
         context = this;
         startService(new Intent(this,MyService.class));
-        NETWORK = isNetworkAvailable();
         myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
         fragmentInput = new FragmentInput();
         fragmentList = new FragmentList();
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity
         fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.folder, fragmentInput);
         fTrans.commit();
-        if(NETWORK){
+        if(InternetListener.NETWORK){
         DBadd(mListener);}
 
 
@@ -131,11 +130,19 @@ public class MainActivity extends AppCompatActivity
     //Это реализация интерфейса с фрагмента
     @Override
     public void saveText(String text, long time) {
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-        ItemObject itemObject = new ItemObject(text,String.valueOf(new Date(time)),
-                userName.getString(MainActivity.SAVED_USER_NAME, "User1"), telephonyManager.getDeviceId());
-        myFirebaseRef.push().setValue(itemObject);
-
+      if(InternetListener.NETWORK) {
+          TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+          ItemObject itemObject = new ItemObject(text, String.valueOf(new Date(time)),
+                  userName.getString(MainActivity.SAVED_USER_NAME, "User1"), telephonyManager.getDeviceId());
+          myFirebaseRef.push().setValue(itemObject);
+      }else{
+          db = dbHelper.getWritableDatabase();
+          ContentValues cv = new ContentValues();
+          cv.put("time",String.valueOf(new Date(time)));
+          cv.put("user", userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
+          cv.put("text", text);
+          db.insert("myMes", null, cv);
+      }
 
         Toast.makeText(MainActivity.context, "Сохранено", Toast.LENGTH_LONG).show();
 
@@ -186,10 +193,5 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
 }
