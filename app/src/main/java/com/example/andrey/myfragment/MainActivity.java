@@ -44,12 +44,14 @@ public class MainActivity extends AppCompatActivity
     private DBHelper dbHelper;
     private SharedPreferences userName;
     private Firebase myFirebaseRef;
-    private ChildEventListener mListener;
     SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dbHelper = new DBHelper(this);
+        String internetCheck = "com.example.andrey.myfragment.CONNECTIVITY_CHANGE";
+        sendBroadcast(new Intent(internetCheck));
         onCreateNavigationDrawerToolbar();
         context = this;
         startService(new Intent(this,MyService.class));
@@ -57,15 +59,11 @@ public class MainActivity extends AppCompatActivity
         fragmentInput = new FragmentInput();
         fragmentList = new FragmentList();
         userName = getPreferences(MODE_PRIVATE);
-        dbHelper = new DBHelper(this);
+
         //Add first fragment
         fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.folder, fragmentInput);
         fTrans.commit();
-        if(InternetListener.NETWORK){
-        DBadd(mListener);}
-
-
 
     }
 
@@ -91,9 +89,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -138,54 +133,10 @@ public class MainActivity extends AppCompatActivity
           db.insert("myMes", null, cv);
       }
 
-        Toast.makeText(MainActivity.context, "Сохранено", Toast.LENGTH_LONG).show();
-
-
-
+        Toast.makeText(MainActivity.context, "Сообщение отправлено", Toast.LENGTH_LONG).show();
 
     }
-    private void DBadd(ChildEventListener mListener){
-        db = dbHelper.getWritableDatabase();
-        try {
 
-             db.delete("myMes", null, null);
-        }catch (Exception e){
-
-        }
-        mListener = myFirebaseRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                ItemObject item = dataSnapshot.getValue(ItemObject.class);
-                ContentValues cv = new ContentValues();
-                cv.put("time", item.getDate());
-                cv.put("user", item.getUserName());
-                cv.put("text", item.getText());
-                db.insert("myMes", null, cv);
-                Log.d("logos", "" + item.getText());
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
 
 
 }

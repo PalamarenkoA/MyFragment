@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.andrey.myfragment.MainActivity;
 import com.example.andrey.myfragment.Object.ItemObject;
@@ -32,7 +33,10 @@ public class InternetListener extends BroadcastReceiver
 
 
         if(NETWORK){
+            Toast.makeText(MainActivity.context,"Соеденение установленно",Toast.LENGTH_LONG).show();
             DBadd(mListener);
+        }else{
+            Toast.makeText(MainActivity.context,"Соеденение не установленно",Toast.LENGTH_LONG).show();
         }
 
 

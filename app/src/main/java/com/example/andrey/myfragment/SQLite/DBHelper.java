@@ -14,11 +14,19 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL("create table myMesId ("
+                + "id integer primary key autoincrement,"
+                + "key text" + ");");
+
+
+
         db.execSQL("create table myMes ("
                 + "id integer primary key autoincrement,"
                 + "time text,"
                 + "user text,"
                 + "text text" + ");");
+
+
     }
 
     @Override

@@ -48,6 +48,7 @@ public class FragmentInput extends android.app.Fragment {
             public void onClick(View v) {
                 final onSaveText onSaveText = (onSaveText) getActivity();
                 if (editText.getText().length()>0) {
+                    editText.setText("");
                     onSaveText.saveText(String.valueOf(editText.getText()), new Date().getTime());
                 }else{
                     Toast.makeText(MainActivity.context,"Введите текст",Toast.LENGTH_LONG).show();

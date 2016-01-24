@@ -35,6 +35,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
+                <action android:name="com.example.andrey.myfragment.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
