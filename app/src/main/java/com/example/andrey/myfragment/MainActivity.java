@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         fragmentList = new FragmentList();
         userName = getPreferences(MODE_PRIVATE);
 
-        //Add first fragment
+        //Вставляем первый фрагмент
         fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.folder, fragmentInput);
         fTrans.commit();
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        // Реалиция анимации между фрагментами
        switch (item.getItemId()){
             case R.id.itemListFragment:
                 FragmentManager fm = getFragmentManager();
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //Это реализация интерфейса с фрагмента
+    //Это реализация интерфейса с фрагмента Input
     @Override
     public void saveText(String text, long time) {
       if(InternetListener.NETWORK) {

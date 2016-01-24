@@ -28,7 +28,7 @@ public class FragmentList  extends android.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setAdapter();
+        setAdapter(listView);
     }
 
     @Override
@@ -37,7 +37,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
         userName = getActivity().getPreferences(MainActivity.context.MODE_PRIVATE);
         View v = inflater.inflate(R.layout.fragment_fragment_list, container, false);
         listView = (ListView) v.findViewById(R.id.listView);
-        setAdapter();
+        setAdapter(listView);
 
 
 
@@ -45,7 +45,7 @@ public View onCreateView(LayoutInflater inflater, ViewGroup container,
         }
 
 
-    private void setAdapter(){
+    private void setAdapter(ListView listView){
         if(InternetListener.NETWORK) {
             myFirebaseRef = new Firebase("https://myfragment.firebaseio.com/").child("chat");
             ListAdapterFromFirebase listAdapter = new ListAdapterFromFirebase(myFirebaseRef.limit(50), getActivity(), R.layout.item, userName.getString(MainActivity.SAVED_USER_NAME, "User1"));
